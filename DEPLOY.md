@@ -12,19 +12,9 @@ Este guia detalha como fazer o deploy do EvoConnect no GitHub Pages e outras pla
 
 ### Passo 1: Preparar o Repositório
 
-1. **Crie um novo repositório no GitHub** ou faça fork deste projeto
-2. **Clone o repositório** para sua máquina:
-   ```bash
-   git clone https://github.com/seu-usuario/evoconnect.git
-   cd evoconnect
-   ```
-
-3. **Adicione os arquivos** (se criou um repo novo):
-   ```bash
-   git add .
-   git commit -m "Initial commit - EvoConnect"
-   git push origin main
-   ```
+1. **Repositório já criado**: https://github.com/mindflowai1/evoconnect
+2. **Código já enviado**: O código já foi feito push para o repositório
+3. **Próximo passo**: Configure o GitHub Pages (veja abaixo)
 
 ### Passo 2: Configurar GitHub Pages
 
@@ -39,7 +29,7 @@ Este guia detalha como fazer o deploy do EvoConnect no GitHub Pages e outras pla
 ### Passo 3: Aguardar Deploy
 
 - O GitHub Pages levará alguns minutos para fazer o deploy
-- Uma mensagem aparecerá com a URL: `https://seu-usuario.github.io/evoconnect/`
+- Uma mensagem aparecerá com a URL: `https://mindflowai1.github.io/evoconnect/`
 - Acesse a URL para verificar
 
 ### Passo 4: Domínio Personalizado (Opcional)
