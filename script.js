@@ -36,71 +36,19 @@ class EvoConnect {
 
     // ===== Settings Management =====
     loadSettings() {
-        // Configurações padrão (pré-configuradas)
-        // Nota: A URL base da API - tente sem /manager primeiro, se não funcionar, adicione /manager
-        const defaultSettings = {
-            apiUrl: 'https://n8n-evolution.kof6cn.easypanel.host',
-            apiKey: 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O'
-        };
+        // Configurações hardcoded (não expostas ao cliente por segurança)
+        // IMPORTANTE: Estas configurações são privadas e não podem ser alteradas pelo cliente
+        this.apiUrl = 'https://n8n-evolution.kof6cn.easypanel.host';
+        this.apiKey = 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O';
 
-        // Tenta carregar do localStorage primeiro
-        const savedSettings = localStorage.getItem('evoconnect_settings');
-        
-        if (savedSettings) {
-            try {
-                const { apiUrl, apiKey } = JSON.parse(savedSettings);
-                // Se tem configurações salvas, usa elas
-                this.apiUrl = apiUrl || defaultSettings.apiUrl;
-                this.apiKey = apiKey || defaultSettings.apiKey;
-            } catch (e) {
-                // Se erro ao parsear, usa padrões
-                this.apiUrl = defaultSettings.apiUrl;
-                this.apiKey = defaultSettings.apiKey;
-            }
-        } else {
-            // Se não tem configurações salvas, usa as padrões e salva
-            this.apiUrl = defaultSettings.apiUrl;
-            this.apiKey = defaultSettings.apiKey;
-            
-            // Salva automaticamente as configurações padrão
-            localStorage.setItem('evoconnect_settings', JSON.stringify({
-                apiUrl: this.apiUrl,
-                apiKey: this.apiKey
-            }));
-        }
-
-        // Preenche os campos do formulário
-        document.getElementById('apiUrl').value = this.apiUrl;
-        document.getElementById('apiKey').value = this.apiKey;
-    }
-
-    saveSettings() {
-        this.apiUrl = document.getElementById('apiUrl').value.trim();
-        this.apiKey = document.getElementById('apiKey').value.trim();
-
+        // Validação básica
         if (!this.apiUrl || !this.apiKey) {
-            this.showToast('error', 'Erro', 'Preencha todos os campos de configuração');
-            return false;
+            console.error('Configurações da API não encontradas');
+            this.showToast('error', 'Erro', 'Configuração da API não disponível. Contate o suporte.');
         }
-
-        // Remove trailing slash from URL
-        this.apiUrl = this.apiUrl.replace(/\/$/, '');
-
-        // Validar URL
-        if (!this.validateApiUrl(this.apiUrl)) {
-            this.showToast('error', 'Erro', 'URL inválida. Use http:// ou https:// (ex: https://sua-api.com)');
-            return false;
-        }
-
-        localStorage.setItem('evoconnect_settings', JSON.stringify({
-            apiUrl: this.apiUrl,
-            apiKey: this.apiKey
-        }));
-
-        this.showToast('success', 'Sucesso', 'Configurações salvas com sucesso!');
-        this.toggleSettings();
-        return true;
     }
+
+    // Método removido: saveSettings() - Configurações não podem ser alteradas pelo cliente
 
     // ===== Connected Instances Management =====
     loadConnectedInstances() {
@@ -203,10 +151,7 @@ class EvoConnect {
             this.scrollToTop();
         });
 
-        // Settings
-        document.getElementById('btnSettings').addEventListener('click', () => this.toggleSettings());
-        document.getElementById('btnCloseSettings').addEventListener('click', () => this.toggleSettings());
-        document.getElementById('btnSaveSettings').addEventListener('click', () => this.saveSettings());
+        // Settings removido - configurações são hardcoded por segurança
 
         // Connection
         document.getElementById('btnConnect').addEventListener('click', () => this.connect());
@@ -231,10 +176,7 @@ class EvoConnect {
         });
     }
 
-    toggleSettings() {
-        const panel = document.getElementById('settingsPanel');
-        panel.classList.toggle('active');
-    }
+    // Método removido: toggleSettings() - Painel de configurações não existe mais
 
     updateUI() {
         // Configurações já estão carregadas automaticamente
@@ -246,8 +188,8 @@ class EvoConnect {
         
         // Se por algum motivo não tem configurações, mostra aviso
         if (!this.apiUrl || !this.apiKey) {
-            this.showToast('info', 'Configuração Necessária', 'Por favor, configure a URL e chave da API primeiro');
-            setTimeout(() => this.toggleSettings(), 500);
+            console.error('Configurações da API não disponíveis');
+            this.showToast('error', 'Erro', 'Configuração da API não disponível. Contate o suporte.');
         }
     }
 
@@ -568,15 +510,13 @@ class EvoConnect {
         }
 
         if (!this.apiUrl || !this.apiKey) {
-            this.showToast('error', 'Erro', 'Configure a API primeiro');
-            this.toggleSettings();
+            this.showToast('error', 'Erro', 'Configuração da API não disponível. Contate o suporte.');
             return;
         }
 
         // Validar URL antes de tentar conectar
         if (!this.validateApiUrl(this.apiUrl)) {
-            this.showToast('error', 'Erro', 'URL da API inválida. Use http:// ou https://');
-            this.toggleSettings();
+            this.showToast('error', 'Erro', 'URL da API inválida. Contate o suporte.');
             return;
         }
 
@@ -1008,10 +948,7 @@ class EvoConnect {
     // ===== Scroll to Top =====
     scrollToTop() {
         // Fechar painel de configurações se estiver aberto
-        const settingsPanel = document.getElementById('settingsPanel');
-        if (settingsPanel.classList.contains('active')) {
-            this.toggleSettings();
-        }
+        // Painel de configurações removido - configurações são hardcoded
         
         // Fechar QR card se estiver aberto
         const qrCard = document.getElementById('qrCard');

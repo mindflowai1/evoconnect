@@ -338,3 +338,4 @@ Você compartilhou seu `.env` aqui. **Recomendações:**
   <p>Dúvidas? Veja <a href="QUICK_START.md">Guia Rápido</a></p>
 </div>
 
+

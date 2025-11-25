@@ -72,3 +72,4 @@ Write-Host "   (alguns recursos podem não funcionar)" -ForegroundColor Gray
 Write-Host ""
 Read-Host "Pressione Enter para sair"
 
+

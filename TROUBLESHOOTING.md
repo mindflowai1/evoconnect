@@ -509,12 +509,15 @@ Se a Evolution API está em um servidor:
 
 ### 💡 Melhorias implementadas no EvoConnect:
 
+- ✅ **Endpoints Seguros**: Removido endpoint `/instance/{name}` que podia causar desconexão
+- ✅ **Apenas GET em verificações**: Verificações de status usam apenas métodos GET (leitura)
 - ✅ **Sistema Keep-Alive**: Mantém conexões ativas automaticamente a cada 2 minutos
 - ✅ Polling reduzido de 3s para 5s durante conexão inicial
 - ✅ Verificação periódica de status a cada 60s (em vez de a cada atualização de UI)
 - ✅ Cache de nomes de instâncias para reduzir requisições
 - ✅ Atualização de UI apenas quando status realmente muda
 - ✅ Tratamento de erros melhorado para não desconectar por engano
+- ✅ Botão "Verificar Status" usa apenas endpoints seguros de leitura
 
 #### 🔄 Como funciona o Keep-Alive:
 

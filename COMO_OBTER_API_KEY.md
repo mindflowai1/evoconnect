@@ -429,3 +429,4 @@ Isso garante que você tem uma chave válida e sabe onde ela está! 🎯
   <p>Dúvidas? Veja o <a href="QUICK_START.md">Guia Rápido</a> ou <a href="FAQ.md">FAQ</a></p>
 </div>
 
+

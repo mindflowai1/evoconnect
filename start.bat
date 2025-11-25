@@ -75,3 +75,4 @@ echo 🛑 Servidor parado.
 echo.
 pause
 
+
