@@ -420,11 +420,12 @@ class EvoConnect {
                     // Usar endpoint de status que é leve e não causa desconexão
                     const encodedName = encodeURIComponent(instanceName);
                     
-                    // Tentar endpoints leves que mantêm a conexão ativa
+                    // Tentar endpoints leves que mantêm a conexão ativa (APENAS LEITURA)
+                    // IMPORTANTE: Usar apenas endpoints GET que não causam desconexão
                     const keepAliveEndpoints = [
-                        `/instance/connectionState/${encodedName}`,
-                        `/instance/status/${encodedName}`,
-                        `/instance/${encodedName}`
+                        `/instance/connectionState/${encodedName}`,  // Mais seguro - apenas estado
+                        `/instance/status/${encodedName}`           // Seguro - apenas status
+                        // Removido: `/instance/${encodedName}` - pode ter efeitos colaterais
                     ];
 
                     for (const endpoint of keepAliveEndpoints) {
@@ -470,6 +471,15 @@ class EvoConnect {
         if (!this.apiUrl || !this.apiKey) {
             this.showToast('error', 'Erro', 'Configure a API primeiro');
             return null;
+        }
+
+        // IMPORTANTE: Garantir que verificações de status usam apenas GET
+        // Métodos DELETE, PUT podem causar desconexão
+        if (method === 'GET' || !method) {
+            // Verificações de status são sempre GET - seguro
+        } else if (method === 'DELETE' || method === 'PUT') {
+            // Apenas para desconexão explícita - nunca em verificações de status
+            console.warn(`⚠️ Usando método ${method} - apenas para desconexão explícita`);
         }
 
         // Validar URL e remover /manager se existir (a API não precisa disso)
@@ -804,21 +814,25 @@ class EvoConnect {
             // Usar o name da instância
             const encodedName = encodeURIComponent(instanceName);
             
+            // IMPORTANTE: Usar apenas endpoints GET de leitura que NÃO causam desconexão
+            // Ordem: endpoints mais seguros primeiro
             const endpoints = [
-                `/instance/connectionState/${encodedName}`,
-                `/instance/status/${encodedName}`,
-                `/instance/${encodedName}`
+                `/instance/connectionState/${encodedName}`,  // Mais seguro - apenas estado
+                `/instance/status/${encodedName}`           // Seguro - apenas status
+                // Removido: `/instance/${encodedName}` - pode ter efeitos colaterais
             ];
 
             let statusData = null;
 
             for (const endpoint of endpoints) {
                 try {
-                    statusData = await this.makeRequest(endpoint);
+                    // Usar apenas GET (método padrão) - nunca POST, PUT ou DELETE
+                    statusData = await this.makeRequest(endpoint, 'GET');
                     if (statusData) break;
                 } catch (err) {
                     // Não logar erros de status check para não poluir o console
                     // Apenas tentar próximo endpoint
+                    continue;
                 }
             }
 
@@ -882,15 +896,18 @@ class EvoConnect {
     }
 
     async reconnect(instanceCode) {
+        // IMPORTANTE: Esta função apenas VERIFICA status, nunca desconecta
         this.showToast('info', 'Verificando', `Verificando status de ${instanceCode}...`);
         
         try {
+            // Usar apenas verificação de status (GET) - nunca POST, PUT ou DELETE
             const status = await this.checkInstanceStatus(instanceCode);
             
             if (status === 'open' || status === 'connected') {
                 this.showToast('success', 'Conectado', 'Instância está conectada!');
                 this.updateInstanceStatus(instanceCode, 'connected');
             } else {
+                // Apenas informar o status - NÃO desconectar
                 this.showToast('warning', 'Desconectado', 'A instância está desconectada. Conecte novamente.');
                 this.updateInstanceStatus(instanceCode, 'disconnected');
                 
@@ -899,7 +916,8 @@ class EvoConnect {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         } catch (error) {
-            this.showToast('error', 'Erro', 'Não foi possível verificar o status');
+            console.error('Erro ao verificar status (não causa desconexão):', error);
+            this.showToast('error', 'Erro', 'Não foi possível verificar o status. A instância não foi desconectada.');
         }
     }
 
