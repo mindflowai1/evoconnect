@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvoConnect - Conexão WhatsApp Evolution API</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo" id="logoLink" onclick="event.preventDefault(); app.scrollToTop();">
+                <img src="logo1.png" alt="Mindflow Logo" class="logo-image" />
+                <h1>EvoConnect</h1>
+            </a>
+            <button class="btn-settings" id="btnSettings" aria-label="Configurações">
+                <svg class="settings-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.42-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2h-.22a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.42-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2H2"/>
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.42-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2h-.22a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.42-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2H2"/>
+                    <path d="M7 13v-1"/>
+                    <path d="M7 17v-1"/>
+                    <path d="M16 13v-1"/>
+                    <path d="M16 17v-1"/>
+                    <path d="M12 7v1"/>
+                    <path d="M12 11v1"/>
+                    <path d="M12 15v1"/>
+                    <path d="M12 19v1"/>
+                </svg>
+                <span class="settings-text">Configurações</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Settings Panel -->
+            <div class="settings-panel" id="settingsPanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Configurações da API</h2>
+                        <button class="btn-close" id="btnCloseSettings">✕</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="apiUrl">URL da Evolution API</label>
+                            <input type="text" id="apiUrl" placeholder="https://sua-api.com" />
+                            <small>Ex: https://evolution.suaempresa.com</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="apiKey">API Key</label>
+                            <input type="password" id="apiKey" placeholder="Sua chave de API" />
+                            <small>Chave de autenticação fornecida pela Evolution API</small>
+                        </div>
+                        <div class="config-notice">
+                            <small>
+                                ✅ Configurações pré-configuradas! Os campos acima já estão preenchidos automaticamente.
+                                Você pode alterar se necessário.
+                            </small>
+                        </div>
+                        <button class="btn btn-primary" id="btnSaveSettings">Salvar Configurações</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Panel -->
+            <div class="connection-panel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Conectar Instância WhatsApp</h2>
+                        <div class="status-badge status-connected" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;">
+                            ✅ API Configurada
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="instanceCode">Código da Instância (Token)</label>
+                            <input type="text" id="instanceCode" placeholder="" />
+                            <small>Digite o código/token da instância fornecido pela MindFlow.</small>
+                        </div>
+                        <button class="btn btn-success" id="btnConnect">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            Conectar WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- QR Code Display -->
+                <div class="card qr-card" id="qrCard" style="display: none;">
+                    <div class="card-header">
+                        <h2>Escaneie o QR Code</h2>
+                        <div class="status-badge status-waiting">Aguardando Conexão</div>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="qr-container">
+                            <img id="qrCode" src="" alt="QR Code" />
+                            <div class="qr-loader" id="qrLoader">
+                                <div class="spinner"></div>
+                                <p>Gerando QR Code...</p>
+                            </div>
+                        </div>
+                        <div class="qr-instructions">
+                            <h3>Como conectar:</h3>
+                            <ol>
+                                <li>Abra o WhatsApp no seu celular</li>
+                                <li>Toque em <strong>Menu</strong> ou <strong>Configurações</strong></li>
+                                <li>Selecione <strong>Aparelhos conectados</strong></li>
+                                <li>Toque em <strong>Conectar um aparelho</strong></li>
+                                <li>Aponte seu celular para esta tela para escanear o código</li>
+                            </ol>
+                        </div>
+                        <button class="btn btn-outline" id="btnCancelConnection">Cancelar</button>
+                    </div>
+                </div>
+
+                <!-- Connected Instances -->
+                <div class="card" id="connectedCard" style="display: none;">
+                    <div class="card-header">
+                        <h2>Instâncias Conectadas</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="instancesList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3>Confirmar Desconexão</h3>
+            <p>Tem certeza que deseja desconectar esta instância?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="btnCancelModal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmModal">Desconectar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
